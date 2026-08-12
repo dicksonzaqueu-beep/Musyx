@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0a1a">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Musyx">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<title>Musyx — A sua música. O seu estilo.</title>
+<style>
+:root{
+  --purple:#7c3aed; --purple-2:#a855f7; --purple-dk:#4c1d95;
+  --pink:#ec4899; --pink-2:#f472b6;
+  --ink:#0e0a1a; --ink-2:#160f28; --panel:rgba(255,255,255,.04);
+  --line:rgba(168,139,250,.16); --line-2:rgba(168,139,250,.28);
+  --text:#f3effc; --muted:#a99fc4; --muted-2:#7b7196;
+  --glass:rgba(28,20,48,.55);
+  --grad:linear-gradient(120deg,#7c3aed 0%,#a855f7 45%,#ec4899 100%);
+  --grad-soft:linear-gradient(120deg,rgba(124,58,237,.18),rgba(236,72,153,.14));
+  --radius:18px; --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+/* Prevent any element from causing sideways scroll on narrow phones */
+html,body{max-width:100%;overflow-x:hidden}
+img,svg,video,canvas{max-width:100%}
+body{
+  font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+  background:var(--ink); color:var(--text);
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; line-height:1.5;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:-2;
+  background:
+    radial-gradient(900px 600px at 78% -8%,rgba(168,85,247,.22),transparent 60%),
+    radial-gradient(800px 600px at 12% 8%,rgba(236,72,153,.16),transparent 55%),
+    radial-gradient(700px 700px at 50% 110%,rgba(124,58,237,.18),transparent 60%),
+    var(--ink);
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:-1; opacity:.5; pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+body.light{
+  --ink:#f6f3fc; --ink-2:#ffffff; --text:#1a1230; --muted:#5e5478; --muted-2:#8a80a4;
+  --panel:rgba(124,58,237,.05); --line:rgba(124,58,237,.16); --line-2:rgba(124,58,237,.3);
+  --glass:rgba(255,255,255,.7);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.hidden{display:none!important}
+
+/* ---------- top nav ---------- */
+header.nav{
+  position:sticky;top:0;z-index:60;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:linear-gradient(to bottom,rgba(14,10,26,.85),rgba(14,10,26,.4));
+  border-bottom:1px solid var(--line);
+}
+body.light header.nav{background:linear-gradient(to bottom,rgba(246,243,252,.9),rgba(246,243,252,.5))}
+.nav-in{display:flex;align-items:center;gap:18px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;letter-spacing:-.5px}
+.brand .dot{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 20px rgba(124,58,237,.5)}
+.brand .dot svg{width:17px;height:17px}
+.brand b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-links{display:flex;gap:26px;margin-left:14px}
+.nav-links a{font-size:14.5px;color:var(--muted);font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.lang{display:flex;border:1px solid var(--line-2);border-radius:999px;overflow:hidden;font-size:12.5px;font-weight:700}
+.lang button{padding:6px 12px;color:var(--muted)}
+.lang button.on{background:var(--grad);color:#fff}
+.icon-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);transition:.2s}
+.icon-btn:hover{color:var(--text);border-color:var(--line-2)}
+.btn{display:inline-flex;align-items:center;gap:9px;justify-content:center;font-weight:700;border-radius:12px;padding:11px 20px;font-size:14.5px;transition:transform .15s,box-shadow .2s,opacity .2s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 30px rgba(124,58,237,.4)}
+.btn-primary:hover{box-shadow:0 14px 38px rgba(236,72,153,.5)}
+.btn-ghost{border:1px solid var(--line-2);color:var(--text)}
+.btn-ghost:hover{background:var(--panel)}
+.btn-lg{padding:15px 30px;font-size:16px}
+.net{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--muted);padding:6px 11px;border:1px solid var(--line);border-radius:999px}
+.net .ring{width:9px;height:9px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.18)}
+.net.off .ring{background:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,.18)}
+
+/* ---------- screens ---------- */
+.screen{display:none;animation:fade .5s ease both}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:74px 0 40px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.3px;color:var(--purple-2);background:var(--grad-soft);border:1px solid var(--line-2);padding:7px 15px;border-radius:999px;margin-bottom:26px}
+.eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--pink);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+h1.hero-t{font-size:clamp(40px,7vw,80px);line-height:1.02;font-weight:800;letter-spacing:-2px;margin:0 auto 22px;max-width:14ch}
+h1.hero-t .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.hero-sub{font-size:clamp(16px,2.2vw,20px);color:var(--muted);max-width:52ch;margin:0 auto 34px;line-height:1.6}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.hero-feats{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;color:var(--muted);font-size:13.5px;font-weight:500}
+.hero-feats span{display:inline-flex;align-items:center;gap:7px}
+.hero-feats svg{width:15px;height:15px;color:var(--purple-2)}
+
+/* ---------- waveform signature ---------- */
+.wave-wrap{max-width:760px;margin:44px auto 0;padding:0 10px}
+.wave-card{border:1px solid var(--line-2);border-radius:22px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:26px 28px;box-shadow:0 30px 80px -30px rgba(124,58,237,.5)}
+.wave-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.play{width:52px;height:52px;border-radius:50%;background:var(--grad);display:grid;place-items:center;flex:none;box-shadow:0 10px 28px rgba(236,72,153,.45);transition:transform .15s}
+.play:active{transform:scale(.93)}
+.play svg{width:20px;height:20px;color:#fff;margin-left:2px}
+.wave-meta{text-align:left;flex:1;min-width:0}
+.wave-meta .tt{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wave-meta .ss{font-size:12.5px;color:var(--muted);margin-top:2px}
+.wave-tag{font-size:11px;font-weight:700;color:var(--purple-2);border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;flex:none}
+.bars{display:flex;align-items:center;gap:3px;height:74px}
+.bars i{flex:1;border-radius:3px;background:var(--grad);min-width:2px;opacity:.55;transition:height .12s ease, opacity .12s}
+.bars.playing i{opacity:.95}
+
+/* ---------- generic section ---------- */
+.section{padding:64px 0}
+.sec-head{text-align:center;max-width:60ch;margin:0 auto 44px}
+.sec-eyebrow{font-size:12.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--pink-2);margin-bottom:12px}
+.sec-head h2{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-1px;line-height:1.1}
+.sec-head p{color:var(--muted);margin-top:14px;font-size:16px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;background:var(--panel);overflow:hidden}
+.step .num{font-size:13px;font-weight:800;color:var(--purple-2);letter-spacing:1px}
+.step h3{font-size:19px;margin:14px 0 8px;font-weight:700}
+.step p{color:var(--muted);font-size:14.5px}
+.step .glow{position:absolute;inset:auto -40px -50px auto;width:140px;height:140px;border-radius:50%;background:var(--grad);filter:blur(60px);opacity:.18}
+
+/* pricing */
+.tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:stretch}
+.tier{border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;background:var(--panel);display:flex;flex-direction:column}
+.tier.feat{border-color:transparent;background:linear-gradient(var(--ink-2),var(--ink-2)) padding-box,var(--grad) border-box;border:1.5px solid transparent;box-shadow:0 24px 60px -28px rgba(236,72,153,.6)}
+.tier .pn{font-weight:700;font-size:15px;color:var(--muted)}
+.tier .pr{font-size:34px;font-weight:800;letter-spacing:-1px;margin:8px 0 2px}
+.tier .pr small{font-size:14px;font-weight:600;color:var(--muted)}
+.tier ul{list-style:none;margin:18px 0;display:flex;flex-direction:column;gap:10px;flex:1}
+.tier li{font-size:13.5px;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+.tier li svg{width:15px;height:15px;color:var(--purple-2);flex:none;margin-top:2px}
+.badge{align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;background:var(--grad);color:#fff;padding:4px 10px;border-radius:999px;margin-bottom:12px}
+
+/* testimonial + faq */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.q{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:var(--panel)}
+.q p{font-size:14.5px;line-height:1.6}
+.q .who{margin-top:16px;display:flex;align-items:center;gap:11px}
+.q .av{width:38px;height:38px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:14px;color:#fff}
+.q .who b{font-size:13.5px;display:block}.q .who span{font-size:12px;color:var(--muted)}
+.faq{max-width:760px;margin:0 auto}
+.faq details{border:1px solid var(--line);border-radius:14px;padding:4px 20px;margin-bottom:12px;background:var(--panel)}
+.faq summary{cursor:pointer;padding:16px 0;font-weight:600;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:22px;color:var(--purple-2);font-weight:400}
+.faq details[open] summary::after{content:"\2212"}
+.faq p{color:var(--muted);font-size:14.5px;padding:0 0 18px;line-height:1.6}
+
+footer{border-top:1px solid var(--line);padding:40px 0 60px;margin-top:40px}
+.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:13.5px}
+
+/* ---------- WIZARD ---------- */
+.app-shell{min-height:calc(100vh - 64px);padding:34px 0 80px}
+.wiz-head{max-width:780px;margin:0 auto 26px}
+.prog{height:7px;border-radius:999px;background:var(--panel);border:1px solid var(--line);overflow:hidden;margin-bottom:14px}
+.prog i{display:block;height:100%;background:var(--grad);width:0;transition:width .5s cubic-bezier(.4,0,.2,1);border-radius:999px}
+.prog-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-weight:600}
+.prog-meta .save{display:inline-flex;align-items:center;gap:6px;color:var(--purple-2)}
+.prog-meta .save svg{width:13px;height:13px}
+.wiz-card{max-width:780px;margin:0 auto;border:1px solid var(--line-2);border-radius:24px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:34px 32px;box-shadow:0 30px 80px -34px rgba(124,58,237,.45)}
+.wiz-step{display:none;animation:fade .4s both}
+.wiz-step.on{display:block}
+.wiz-q{font-size:25px;font-weight:800;letter-spacing:-.6px;margin-bottom:6px}
+.wiz-hint{color:var(--muted);font-size:14.5px;margin-bottom:24px}
+.opt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.opt-grid.two{grid-template-columns:repeat(2,1fr)}
+.opt{border:1px solid var(--line);border-radius:14px;padding:15px 14px;background:var(--panel);font-size:14.5px;font-weight:600;text-align:left;transition:.16s;display:flex;align-items:center;gap:11px;color:var(--text)}
+.opt:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.opt .em{font-size:19px;line-height:1}
+.opt.sel{border-color:transparent;background:var(--grad-soft);box-shadow:inset 0 0 0 1.5px var(--purple-2)}
+.opt.sel::after{content:"\2713";margin-left:auto;color:var(--purple-2);font-weight:800}
+.ta{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;color:var(--text);font-size:15px;font-family:inherit;resize:vertical;min-height:130px;line-height:1.6}
+.ta:focus{outline:none;border-color:var(--purple-2);box-shadow:0 0 0 3px rgba(124,58,237,.2)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{font-size:12.5px;font-weight:600;border:1px solid var(--line-2);border-radius:999px;padding:7px 13px;color:var(--purple-2);background:var(--grad-soft);transition:.15s}
+.chip:hover{transform:translateY(-1px)}
+.counter{font-size:12.5px;color:var(--muted);text-align:right;margin-top:8px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+.field label{font-size:13px;font-weight:700;color:var(--muted);display:block;margin-bottom:9px;text-transform:uppercase;letter-spacing:.5px}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-size:13.5px;font-weight:600;background:var(--panel);transition:.15s;color:var(--text)}
+.pill.sel{border-color:transparent;background:var(--grad);color:#fff}
+.slider{width:100%;-webkit-appearance:none;height:6px;border-radius:999px;background:var(--line);outline:none;margin-top:6px}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--grad);cursor:pointer;box-shadow:0 4px 12px rgba(236,72,153,.5)}
+.slider::-moz-range-thumb{width:22px;height:22px;border:none;border-radius:50%;background:var(--purple)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:13px 16px;background:var(--panel);margin-top:10px}
+.toggle-row span{font-size:14px;font-weight:600}
+.tog{width:46px;height:26px;border-radius:999px;background:var(--line-2);position:relative;transition:.2s;flex:none}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+.tog.on{background:var(--grad)}.tog.on::after{left:23px}
+.wiz-nav{display:flex;justify-content:space-between;margin-top:30px;gap:12px}
+
+/* prompt preview */
+.prompt-box{border:1px solid var(--line-2);border-radius:16px;background:var(--ink);padding:0;overflow:hidden;margin-top:6px}
+body.light .prompt-box{background:#faf7ff}
+.prompt-bar{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.prompt-bar .d{width:11px;height:11px;border-radius:50%}
+.prompt-bar .t{margin-left:8px;font-size:12.5px;color:var(--muted);font-weight:600}
+.prompt-body{padding:20px;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.85;white-space:pre-wrap}
+.prompt-body .k{color:var(--purple-2);font-weight:700}
+.prompt-body .v{color:var(--pink-2)}
+.prompt-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* paywall */
+.unlock{border:1.5px solid transparent;background:linear-gradient(var(--ink-2),var(--ink-2)) padding-box,var(--grad) border-box;border-radius:20px;padding:30px;text-align:center;max-width:480px;margin:24px auto 0;box-shadow:0 30px 70px -30px rgba(236,72,153,.6)}
+.unlock .price{font-size:48px;font-weight:800;letter-spacing:-2px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.unlock ul{list-style:none;text-align:left;max-width:280px;margin:18px auto 22px;display:flex;flex-direction:column;gap:11px}
+.unlock li{font-size:14px;display:flex;gap:10px;align-items:center;color:var(--muted)}
+.unlock li svg{width:17px;height:17px;color:var(--purple-2);flex:none}
+
+/* generation screen */
+.gen{max-width:560px;margin:40px auto;text-align:center}
+.gen-orb{width:170px;height:170px;margin:0 auto 30px;position:relative}
+.gen-orb .core{position:absolute;inset:0;border-radius:50%;background:var(--grad);filter:blur(6px);animation:breathe 2.4s ease-in-out infinite}
+.gen-orb .ring{position:absolute;inset:-14px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--pink);animation:spin 1.6s linear infinite}
+.gen-orb .ring2{position:absolute;inset:-30px;border-radius:50%;border:1px solid var(--line);border-bottom-color:var(--purple-2);animation:spin 2.6s linear infinite reverse}
+@keyframes breathe{0%,100%{transform:scale(.86);opacity:.85}50%{transform:scale(1.02);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen h2{font-size:26px;font-weight:800;margin-bottom:10px}
+.gen-stage{font-size:16px;color:var(--purple-2);font-weight:700;height:24px;margin-bottom:22px;transition:.3s}
+.gen-prog{height:9px;border-radius:999px;background:var(--panel);border:1px solid var(--line);overflow:hidden;max-width:380px;margin:0 auto 12px}
+.gen-prog i{display:block;height:100%;width:0;background:var(--grad);transition:width .4s;border-radius:999px}
+.gen-eta{font-size:13px;color:var(--muted)}
+
+/* results */
+.result{max-width:880px;margin:0 auto}
+.res-top{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:center}
+.cover{aspect-ratio:1;border-radius:20px;background:var(--grad);position:relative;overflow:hidden;box-shadow:0 24px 60px -22px rgba(124,58,237,.6)}
+.cover::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.35),transparent 50%),radial-gradient(circle at 75% 80%,rgba(236,72,153,.5),transparent 55%)}
+.cover .note{position:absolute;inset:0;display:grid;place-items:center}
+.cover .note svg{width:64px;height:64px;color:rgba(255,255,255,.9);filter:drop-shadow(0 6px 16px rgba(0,0,0,.3))}
+.res-info .tag{font-size:12px;font-weight:700;color:var(--purple-2);letter-spacing:1px;text-transform:uppercase}
+.res-info h2{font-size:32px;font-weight:800;letter-spacing:-1px;margin:8px 0}
+.res-info .meta{color:var(--muted);font-size:14.5px;margin-bottom:18px}
+.res-actions{display:flex;gap:10px;flex-wrap:wrap}
+.mini{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;border:1px solid var(--line-2);border-radius:11px;padding:9px 14px;color:var(--text);background:var(--panel);transition:.15s}
+.mini:hover{border-color:var(--purple-2)}
+.mini svg{width:15px;height:15px;color:var(--purple-2)}
+.dl-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.dl{flex:1;min-width:130px;border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--panel);text-align:center;transition:.15s}
+.dl:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.dl b{display:block;font-size:15px;font-weight:800}
+.dl span{font-size:12px;color:var(--muted)}
+.lyrics{margin-top:26px;border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:var(--panel)}
+.lyrics h3{font-size:15px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px}
+.lyrics p{font-size:14.5px;line-height:1.9;color:var(--text);white-space:pre-line}
+
+/* dashboard */
+.dash{display:grid;grid-template-columns:230px 1fr;gap:26px;align-items:start}
+.side{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:14px;position:sticky;top:84px}
+.side a{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:11px;font-size:14px;font-weight:600;color:var(--muted);transition:.15s}
+.side a svg{width:17px;height:17px}
+.side a.on,.side a:hover{background:var(--grad-soft);color:var(--text)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.kpi{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--panel)}
+.kpi .n{font-size:30px;font-weight:800;letter-spacing:-1px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kpi .l{font-size:13px;color:var(--muted);margin-top:4px}
+.songlist{display:flex;flex-direction:column;gap:10px}
+.songrow{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:14px;padding:13px 16px;background:var(--panel);transition:.15s}
+.songrow:hover{border-color:var(--line-2)}
+.songrow .sc{width:46px;height:46px;border-radius:11px;background:var(--grad);flex:none;display:grid;place-items:center}
+.songrow .sc svg{width:18px;height:18px;color:#fff}
+.songrow .si{flex:1;min-width:0}
+.songrow .si b{font-size:14.5px;display:block}
+.songrow .si span{font-size:12.5px;color:var(--muted)}
+.songrow .badge-s{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;flex:none}
+.bs-done{color:#34d399;background:rgba(52,211,153,.12)}
+.bs-pend{color:#fbbf24;background:rgba(251,191,36,.12)}
+
+.dash-h{font-size:24px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px}
+.dash-sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink-2);border:1px solid var(--line-2);color:var(--text);padding:13px 20px;border-radius:13px;font-size:14px;font-weight:600;box-shadow:0 18px 50px -18px rgba(0,0,0,.6);z-index:200;transition:transform .4s cubic-bezier(.2,.9,.3,1);display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast svg{width:17px;height:17px;color:var(--purple-2)}
+
+/* offline banner */
+.offbar{display:none;background:linear-gradient(90deg,rgba(251,191,36,.16),rgba(236,72,153,.1));border-bottom:1px solid rgba(251,191,36,.3);text-align:center;font-size:13px;font-weight:600;padding:9px;color:#fbbf24}
+.offbar.show{display:block;animation:fade .3s both}
+
+@media(max-width:860px){
+  .nav-links{display:none}
+  .steps,.tiers,.quotes{grid-template-columns:1fr}
+  .tiers{grid-template-columns:1fr 1fr}
+  .res-top,.dash{grid-template-columns:1fr}
+  .side{position:static;display:flex;overflow-x:auto;gap:6px}
+  .side a{white-space:nowrap}
+  .opt-grid{grid-template-columns:1fr 1fr}
+  .field-row{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .tiers,.opt-grid{grid-template-columns:1fr}
+  .wiz-card{padding:24px 18px}
+  .cover{max-width:200px}
+  .wrap{padding:0 14px}
+  .res-top{gap:18px}
+  h1.hero-t{letter-spacing:-1px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="offbar" id="offbar"></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#" onclick="go('landing');return false">
+      <span class="dot"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l10-2v13" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="#fff" stroke-width="2.2"/><circle cx="16" cy="16" r="3" stroke="#fff" stroke-width="2.2"/></svg></span>
+      Mus<b>yx</b>
+    </a>
+    <nav class="nav-links">
+      <a href="#how" data-i="nav_how">Como funciona</a>
+      <a href="#pricing" data-i="nav_price">Preços</a>
+      <a href="#faq" data-i="nav_faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="net" id="net" onclick="toggleNet()" title="Demo: toggle connection">
+        <span class="ring"></span><span id="netlabel">Online</span>
+      </div>
+      <div class="lang">
+        <button id="lpt" class="on" onclick="setLang('pt')">PT</button>
+        <button id="len" onclick="setLang('en')">EN</button>
+      </div>
+      <button class="icon-btn" onclick="toggleTheme()" title="Theme" id="themebtn">
+        <svg viewBox="0 0 24 24" fill="none" width="17" height="17"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn btn-primary" onclick="go('wizard')" data-i="nav_cta">Começar</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ LANDING ============ -->
+<section class="screen active" id="landing">
+  <div class="hero wrap">
+    <span class="eyebrow"><span class="pulse"></span><span data-i="hero_eyebrow">Funciona offline · Feito para África</span></span>
+    <h1 class="hero-t" data-i="hero_title">A sua música. O seu estilo. <span class="g">100% única.</span></h1>
+    <p class="hero-sub" data-i="hero_sub">Crie música original com inteligência artificial em minutos. Sem saber produção. Responda a algumas perguntas — a Musyx faz o resto.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary btn-lg" onclick="go('wizard')" data-i="hero_cta1">Começar agora</button>
+      <button class="btn btn-ghost btn-lg" onclick="demoPlay()" data-i="hero_cta2">▶ Ver demonstração</button>
+    </div>
+    <div class="hero-feats">
+      <span><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="f1">Música original</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="f2">Letra ou instrumental</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="f3">Uso comercial</span></span>
+      <span><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="f4">Geração rápida</span></span>
+    </div>
+
+    <!-- signature waveform player -->
+    <div class="wave-wrap">
+      <div class="wave-card">
+        <div class="wave-top">
+          <button class="play" id="playBtn" onclick="demoPlay()">
+            <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <div class="wave-meta">
+            <div class="tt" id="waveTitle">Caminho de Luz — Afro House</div>
+            <div class="ss" id="waveSub">Voz feminina · Energética · Português</div>
+          </div>
+          <span class="wave-tag">DEMO</span>
+        </div>
+        <div class="bars" id="bars"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- how it works -->
+  <div class="section wrap" id="how">
+    <div class="sec-head">
+      <div class="sec-eyebrow" data-i="how_eye">Como funciona</div>
+      <h2 data-i="how_h">Três passos. Zero conhecimento técnico.</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="glow"></div><div class="num">01</div><h3 data-i="s1h">Responda às perguntas</h3><p data-i="s1p">Use, género, ambiente, voz e a sua ideia. Um questionário guiado e animado.</p></div>
+      <div class="step"><div class="glow"></div><div class="num">02</div><h3 data-i="s2h">A IA cria o prompt</h3><p data-i="s2p">A Musyx transforma as suas respostas num prompt otimizado — e mostra-o a si.</p></div>
+      <div class="step"><div class="glow"></div><div class="num">03</div><h3 data-i="s3h">Gere a sua música</h3><p data-i="s3p">Pré-visualização gratuita, depois a música completa com letra e instrumental.</p></div>
+    </div>
+  </div>
+
+  <!-- pricing -->
+  <div class="section wrap" id="pricing">
+    <div class="sec-head">
+      <div class="sec-eyebrow" data-i="pr_eye">Preços</div>
+      <h2 data-i="pr_h">Comece grátis. Cresça quando quiser.</h2>
+    </div>
+    <div class="tiers">
+      <div class="tier"><div class="pn">Free</div><div class="pr">$0</div><ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t1a">Pré-visualizações de 20s</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t1b">Gerações limitadas</span></li>
+      </ul><button class="btn btn-ghost" onclick="go('wizard')" data-i="t_start">Começar</button></div>
+      <div class="tier feat"><span class="badge" data-i="popular">Popular</span><div class="pn">Creator</div><div class="pr">$9<small>/mês</small></div><ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t2a">Músicas completas</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t2b">Exportação WAV</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t2c">Uso comercial</span></li>
+      </ul><button class="btn btn-primary" onclick="go('wizard')" data-i="t_choose">Escolher</button></div>
+      <div class="tier"><div class="pn">Pro</div><div class="pr">$29<small>/mês</small></div><ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t3a">Gerações ilimitadas</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t3b">Processamento prioritário</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t3c">Acesso de equipa</span></li>
+      </ul><button class="btn btn-ghost" onclick="go('wizard')" data-i="t_choose2">Escolher</button></div>
+      <div class="tier"><div class="pn">Enterprise</div><div class="pr" data-i="custom">Custom</div><ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t4a">Preços personalizados</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="t4b">Suporte dedicado</span></li>
+      </ul><button class="btn btn-ghost" data-i="t_contact">Contactar</button></div>
+    </div>
+  </div>
+
+  <!-- testimonials -->
+  <div class="section wrap">
+    <div class="sec-head"><div class="sec-eyebrow" data-i="tm_eye">Quem usa</div><h2 data-i="tm_h">Criadores já estão a criar.</h2></div>
+    <div class="quotes">
+      <div class="q"><p data-i="tm1">"Fiz a música de abertura do meu podcast em 4 minutos. Ninguém acredita que foi IA."</p><div class="who"><span class="av">CM</span><div><b>Carla Mondlane</b><span data-i="tm1r">Podcaster, Maputo</span></div></div></div>
+      <div class="q"><p data-i="tm2">"A nossa igreja criou um hino original em português. A congregação adorou."</p><div class="who"><span class="av">JT</span><div><b>João Tembe</b><span data-i="tm2r">Líder de louvor</span></div></div></div>
+      <div class="q"><p data-i="tm3">"Funciona mesmo sem net. Faço os rascunhos no chapa e gero quando chego a casa."</p><div class="who"><span class="av">AS</span><div><b>Aida Sitoe</b><span data-i="tm3r">Criadora de conteúdo</span></div></div></div>
+    </div>
+  </div>
+
+  <!-- faq -->
+  <div class="section wrap" id="faq">
+    <div class="sec-head"><div class="sec-eyebrow">FAQ</div><h2 data-i="faq_h">Perguntas frequentes</h2></div>
+    <div class="faq">
+      <details open><summary data-i="faq1q">Preciso de saber música?</summary><p data-i="faq1a">Não. Responde a um questionário simples e a Musyx cria o prompt e a música por si.</p></details>
+      <details><summary data-i="faq2q">Funciona sem internet?</summary><p data-i="faq2a">Sim. Pode criar projetos, escrever prompts e ouvir músicas já descarregadas offline. A geração e o pagamento ficam em fila e completam-se quando a ligação volta.</p></details>
+      <details><summary data-i="faq3q">Posso usar comercialmente?</summary><p data-i="faq3a">Sim, nos planos pagos. Recebe licença comercial para a sua música.</p></details>
+      <details><summary data-i="faq4q">Que formas de pagamento aceitam?</summary><p data-i="faq4a">Stripe, PayPal e dinheiro móvel: M-Pesa, e-Mola, Mkesh e Airtel Money.</p></details>
+    </div>
+  </div>
+
+  <footer><div class="wrap foot">
+    <div><span class="brand" style="font-size:18px">Mus<b>yx</b></span> &nbsp;© 2026</div>
+    <div data-i="foot">Crie música original com IA — mesmo offline.</div>
+  </div></footer>
+</section>
+
+<!-- ============ WIZARD ============ -->
+<section class="screen" id="wizard">
+  <div class="app-shell wrap">
+    <div class="wiz-head">
+      <div class="prog"><i id="progBar"></i></div>
+      <div class="prog-meta">
+        <span id="progLabel">Passo 1 de 7</span>
+        <span class="save"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="autosave">Guardado automaticamente</span></span>
+      </div>
+    </div>
+    <div class="wiz-card">
+      <!-- step 1 use case -->
+      <div class="wiz-step on" data-step="1">
+        <div class="wiz-q" data-i="q1">Para que está a criar música?</div>
+        <div class="wiz-hint" data-i="q1h">Escolha uma opção.</div>
+        <div class="opt-grid" id="useGrid"></div>
+      </div>
+      <!-- step 2 genre -->
+      <div class="wiz-step" data-step="2">
+        <div class="wiz-q" data-i="q2">Escolha o género</div>
+        <div class="wiz-hint" data-i="q2h">Pode escolher vários.</div>
+        <div class="opt-grid" id="genreGrid"></div>
+      </div>
+      <!-- step 3 mood -->
+      <div class="wiz-step" data-step="3">
+        <div class="wiz-q" data-i="q3">Qual é o ambiente?</div>
+        <div class="wiz-hint" data-i="q3h">Pode escolher vários.</div>
+        <div class="opt-grid" id="moodGrid"></div>
+      </div>
+      <!-- step 4 vocals -->
+      <div class="wiz-step" data-step="4">
+        <div class="wiz-q" data-i="q4">Voz</div>
+        <div class="wiz-hint" data-i="q4h">Como quer a voz?</div>
+        <div class="opt-grid two" id="vocalGrid"></div>
+      </div>
+      <!-- step 5 lyrics -->
+      <div class="wiz-step" data-step="5">
+        <div class="wiz-q" data-i="q5">Letra</div>
+        <div class="wiz-hint" data-i="q5h">Quem escreve a letra?</div>
+        <div class="opt-grid" id="lyricGrid"></div>
+        <div id="lyricEditor" class="hidden" style="margin-top:18px">
+          <textarea class="ta" id="customLyrics" placeholder="Escreva a sua letra aqui..." oninput="countLyrics()"></textarea>
+          <div class="counter"><span id="wc">0</span> <span data-i="words">palavras</span> · <span id="cc">0</span> <span data-i="chars">caracteres</span></div>
+        </div>
+      </div>
+      <!-- step 6 idea -->
+      <div class="wiz-step" data-step="6">
+        <div class="wiz-q" data-i="q6">Descreva a sua música</div>
+        <div class="wiz-hint" data-i="q6h">O ecrã mais importante. Quanto mais detalhe, melhor.</div>
+        <textarea class="ta" id="ideaText" placeholder="Ex: Uma faixa de Afro House motivacional sobre superar desafios e construir um futuro melhor." oninput="saveDraft()"></textarea>
+        <div class="chips" id="ideaChips"></div>
+      </div>
+      <!-- step 7 advanced -->
+      <div class="wiz-step" data-step="7">
+        <div class="wiz-q" data-i="q7">Opções avançadas</div>
+        <div class="wiz-hint" data-i="q7h">Afine os detalhes.</div>
+        <div class="field-row">
+          <div class="field"><label data-i="duration">Duração</label><div class="pill-row" id="durRow"></div></div>
+          <div class="field"><label data-i="langlbl">Idioma</label><div class="pill-row" id="langRow"></div></div>
+        </div>
+        <div class="field" style="margin-top:18px"><label data-i="tempo">Tempo</label><div class="pill-row" id="tempoRow"></div></div>
+        <div class="field" style="margin-top:18px"><label data-i="creativity">Criatividade</label><input type="range" min="0" max="100" value="65" class="slider" id="creaSlider"></div>
+        <div class="toggle-row"><span data-i="explicit">Conteúdo explícito</span><div class="tog" id="togExp" onclick="this.classList.toggle('on')"></div></div>
+        <div class="toggle-row"><span data-i="commercial">Uso comercial</span><div class="tog on" id="togComm" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" id="backBtn" onclick="wizBack()" data-i="back">← Voltar</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="wizNext()" data-i="next">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROMPT PREVIEW ============ -->
+<section class="screen" id="prompt">
+  <div class="app-shell wrap">
+    <div class="wiz-head"><div class="sec-eyebrow" style="text-align:left" data-i="pp_eye">O seu prompt — revelado</div>
+      <h2 style="font-size:26px;font-weight:800;letter-spacing:-.6px" data-i="pp_h">Ao contrário de outros, mostramos-lhe o prompt.</h2>
+      <p style="color:var(--muted);font-size:14.5px;margin-top:6px" data-i="pp_sub">Edite, copie ou gere a partir dele.</p>
+    </div>
+    <div class="wiz-card" style="max-width:780px">
+      <div class="prompt-box">
+        <div class="prompt-bar"><span class="d" style="background:#ff5f56"></span><span class="d" style="background:#ffbd2e"></span><span class="d" style="background:#27c93f"></span><span class="t">musyx-prompt.json</span></div>
+        <div class="prompt-body" id="promptBody"></div>
+      </div>
+      <div class="prompt-actions">
+        <button class="mini" onclick="copyPrompt()"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg><span data-i="copy">Copiar</span></button>
+        <button class="mini" onclick="toast(t('saved'))"><svg viewBox="0 0 24 24" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" stroke="currentColor" stroke-width="2"/></svg><span data-i="save">Guardar</span></button>
+      </div>
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" onclick="go('wizard')" data-i="edit_ans">← Editar respostas</button>
+        <button class="btn btn-primary" onclick="startPreview()" data-i="gen_preview">Gerar pré-visualização →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GENERATION ============ -->
+<section class="screen" id="generating">
+  <div class="app-shell wrap">
+    <div class="gen">
+      <div class="gen-orb"><div class="ring2"></div><div class="ring"></div><div class="core"></div></div>
+      <h2 data-i="gen_h">A criar a sua música</h2>
+      <div class="gen-stage" id="genStage">A analisar o ambiente...</div>
+      <div class="gen-prog"><i id="genBar"></i></div>
+      <div class="gen-eta" id="genEta"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAYWALL ============ -->
+<section class="screen" id="paywall">
+  <div class="app-shell wrap">
+    <div class="wiz-head" style="text-align:center"><div class="sec-eyebrow" data-i="pw_eye">Pré-visualização pronta</div>
+      <h2 style="font-size:26px;font-weight:800;letter-spacing:-.6px" data-i="pw_h">Ouça os primeiros 20 segundos.</h2>
+    </div>
+    <div class="wave-wrap" style="margin-top:10px">
+      <div class="wave-card">
+        <div class="wave-top">
+          <button class="play" onclick="demoPlay()"><svg viewBox="0 0 24 24" fill="currentColor" id="pwIcon"><path d="M8 5v14l11-7z"/></svg></button>
+          <div class="wave-meta"><div class="tt" id="pwTitle">Caminho de Luz</div><div class="ss" data-i="pw_prev">Pré-visualização · 20 segundos</div></div>
+          <span class="wave-tag">20s</span>
+        </div>
+        <div class="bars" id="bars2"></div>
+      </div>
+    </div>
+    <div class="unlock">
+      <div class="sec-eyebrow" data-i="pw_unlock">Desbloquear música completa</div>
+      <div class="price">$4.99</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="u1">Música completa</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="u2">Exportação WAV</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="u3">Letra em PDF</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="u4">Versão instrumental</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span data-i="u5">Licença comercial</span></li>
+      </ul>
+      <button class="btn btn-primary btn-lg" style="width:100%" onclick="payAndGenerate()" data-i="pay">Pagar e gerar — $4.99</button>
+      <div style="font-size:12px;color:var(--muted);margin-top:12px" data-i="pay_rails">Stripe · PayPal · M-Pesa · e-Mola · Mkesh · Airtel</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section class="screen" id="results">
+  <div class="app-shell wrap">
+    <div class="result">
+      <div class="res-top">
+        <div class="cover"><div class="note"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l10-2v13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="16" r="3" stroke="currentColor" stroke-width="2"/></svg></div></div>
+        <div class="res-info">
+          <div class="tag" id="resGenre">Afro House</div>
+          <h2 id="resTitle">Caminho de Luz</h2>
+          <div class="meta" id="resMeta">Voz feminina · Energética · 3 min · Português</div>
+          <div class="wave-card" style="padding:18px 20px;margin-bottom:18px">
+            <div class="wave-top" style="margin-bottom:14px">
+              <button class="play" style="width:44px;height:44px" onclick="demoPlay()"><svg viewBox="0 0 24 24" fill="currentColor" id="resIcon"><path d="M8 5v14l11-7z"/></svg></button>
+              <div class="wave-meta"><div class="ss" id="resTime">0:00 / 3:00</div></div>
+            </div>
+            <div class="bars" id="bars3" style="height:50px"></div>
+          </div>
+          <div class="res-actions">
+            <button class="mini" onclick="toast(t('remixing'))"><svg viewBox="0 0 24 24" fill="none"><path d="M16 3l4 4-4 4M20 7H8a4 4 0 00-4 4v0M8 21l-4-4 4-4M4 17h12a4 4 0 004-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i="remix">Remix</span></button>
+            <button class="mini" onclick="toast(t('extending'))"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span data-i="extend">Estender</span></button>
+            <button class="mini" onclick="toast(t('instru'))"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l10-2v13" stroke="currentColor" stroke-width="2"/></svg><span data-i="instrumental">Instrumental</span></button>
+            <button class="mini" onclick="startPreview(true)"><svg viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2"/><path d="M20.5 9A9 9 0 006 5.6L1 10m22 4l-5 4.4A9 9 0 013.5 15" stroke="currentColor" stroke-width="2"/></svg><span data-i="regen">Regerar</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dl-row">
+        <button class="dl" onclick="downloadSong()"><b>MP3</b><span data-i="dl_mp3">Áudio padrão</span></button>
+        <button class="dl" onclick="downloadSong()"><b>WAV</b><span data-i="dl_wav">Alta qualidade</span></button>
+        <button class="dl" onclick="toast(t('downloading')+' PDF')"><b>PDF</b><span data-i="dl_pdf">Letra</span></button>
+        <button class="dl" onclick="toast(t('downloading')+' '+t('instrumental'))"><b>STEM</b><span data-i="dl_inst">Instrumental</span></button>
+      </div>
+
+      <div class="lyrics">
+        <h3 data-i="lyrics_h">Letra <span id="lyricsBadge" style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:8px;display:none"></span></h3>
+        <p id="lyricsText"></p>
+      </div>
+
+      <div class="wiz-nav">
+        <button class="btn btn-ghost" onclick="go('dashboard')" data-i="to_dash">Ir para o painel →</button>
+        <button class="btn btn-primary" onclick="resetWizard();go('wizard')" data-i="new_song">Criar outra música</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section class="screen" id="dashboard">
+  <div class="app-shell wrap">
+    <div class="dash">
+      <aside class="side">
+        <a class="on"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l10-2v13" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/></svg><span data-i="d_songs">As minhas músicas</span></a>
+        <a><svg viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg><span data-i="d_recent">Recentes</span></a>
+        <a><svg viewBox="0 0 24 24" fill="none"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" stroke="currentColor" stroke-width="2"/></svg><span data-i="d_prompts">Prompts guardados</span></a>
+        <a><svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.6a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21l8.84-8.6a5.5 5.5 0 000-7.78z" stroke="currentColor" stroke-width="2"/></svg><span data-i="d_fav">Favoritos</span></a>
+        <a><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21a8 8 0 0116 0" stroke="currentColor" stroke-width="2"/></svg><span data-i="d_account">Conta</span></a>
+      </aside>
+      <main>
+        <div class="dash-h" data-i="d_hello">Olá, criador 👋</div>
+        <div class="dash-sub" data-i="d_subtitle">Aqui está a sua atividade musical.</div>
+        <div class="kpis">
+          <div class="kpi"><div class="n" id="kpiSongs">12</div><div class="l" data-i="d_k1">Músicas criadas</div></div>
+          <div class="kpi"><div class="n" id="kpiQueue">3</div><div class="l" data-i="d_k2">Na fila (offline)</div></div>
+          <div class="kpi"><div class="n">8</div><div class="l" data-i="d_k3">Prompts guardados</div></div>
+        </div>
+        <div class="songlist" id="songList"></div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5"/></svg><span id="toastMsg"></span></div>
+
+<script>
+/* ================= i18n ================= */
+const I18N={
+  pt:{
+    nav_how:"Como funciona",nav_price:"Preços",nav_faq:"FAQ",nav_cta:"Começar",
+    hero_eyebrow:"Funciona offline · Feito para África",
+    hero_title:["A sua música. O seu estilo. ","100% única."],
+    hero_sub:"Crie música original com inteligência artificial em minutos. Sem saber produção. Responda a algumas perguntas — a Musyx faz o resto.",
+    hero_cta1:"Começar agora",hero_cta2:"▶ Ver demonstração",
+    f1:"Música original",f2:"Letra ou instrumental",f3:"Uso comercial",f4:"Geração rápida",
+    how_eye:"Como funciona",how_h:"Três passos. Zero conhecimento técnico.",
+    s1h:"Responda às perguntas",s1p:"Uso, género, ambiente, voz e a sua ideia. Um questionário guiado e animado.",
+    s2h:"A IA cria o prompt",s2p:"A Musyx transforma as suas respostas num prompt otimizado — e mostra-o a si.",
+    s3h:"Gere a sua música",s3p:"Pré-visualização gratuita, depois a música completa com letra e instrumental.",
+    pr_eye:"Preços",pr_h:"Comece grátis. Cresça quando quiser.",popular:"Popular",custom:"Custom",
+    t1a:"Pré-visualizações de 20s",t1b:"Gerações limitadas",t_start:"Começar",
+    t2a:"Músicas completas",t2b:"Exportação WAV",t2c:"Uso comercial",t_choose:"Escolher",
+    t3a:"Gerações ilimitadas",t3b:"Processamento prioritário",t3c:"Acesso de equipa",t_choose2:"Escolher",
+    t4a:"Preços personalizados",t4b:"Suporte dedicado",t_contact:"Contactar",
+    tm_eye:"Quem usa",tm_h:"Criadores já estão a criar.",
+    tm1:'"Fiz a música de abertura do meu podcast em 4 minutos. Ninguém acredita que foi IA."',tm1r:"Podcaster, Maputo",
+    tm2:'"A nossa igreja criou um hino original em português. A congregação adorou."',tm2r:"Líder de louvor",
+    tm3:'"Funciona mesmo sem net. Faço os rascunhos no chapa e gero quando chego a casa."',tm3r:"Criadora de conteúdo",
+    faq_h:"Perguntas frequentes",
+    faq1q:"Preciso de saber música?",faq1a:"Não. Responde a um questionário simples e a Musyx cria o prompt e a música por si.",
+    faq2q:"Funciona sem internet?",faq2a:"Sim. Pode criar projetos, escrever prompts e ouvir músicas já descarregadas offline. A geração e o pagamento ficam em fila e completam-se quando a ligação volta.",
+    faq3q:"Posso usar comercialmente?",faq3a:"Sim, nos planos pagos. Recebe licença comercial para a sua música.",
+    faq4q:"Que formas de pagamento aceitam?",faq4a:"Stripe, PayPal e dinheiro móvel: M-Pesa, e-Mola, Mkesh e Airtel Money.",
+    foot:"Crie música original com IA — mesmo offline.",
+    autosave:"Guardado automaticamente",
+    q1:"Para que está a criar música?",q1h:"Escolha uma opção.",
+    q2:"Escolha o género",q2h:"Pode escolher vários.",
+    q3:"Qual é o ambiente?",q3h:"Pode escolher vários.",
+    q4:"Voz",q4h:"Como quer a voz?",
+    q5:"Letra",q5h:"Quem escreve a letra?",
+    q6:"Descreva a sua música",q6h:"O ecrã mais importante. Quanto mais detalhe, melhor.",
+    q7:"Opções avançadas",q7h:"Afine os detalhes.",
+    words:"palavras",chars:"caracteres",
+    duration:"Duração",langlbl:"Idioma",tempo:"Tempo",creativity:"Criatividade",explicit:"Conteúdo explícito",commercial:"Uso comercial",
+    back:"← Voltar",next:"Continuar →",
+    pp_eye:"O seu prompt — revelado",pp_h:"Ao contrário de outros, mostramos-lhe o prompt.",pp_sub:"Edite, copie ou gere a partir dele.",
+    copy:"Copiar",save:"Guardar",edit_ans:"← Editar respostas",gen_preview:"Gerar pré-visualização →",
+    gen_h:"A criar a sua música",
+    pw_eye:"Pré-visualização pronta",pw_h:"Ouça os primeiros 20 segundos.",pw_prev:"Pré-visualização · 20 segundos",
+    pw_unlock:"Desbloquear música completa",u1:"Música completa",u2:"Exportação WAV",u3:"Letra em PDF",u4:"Versão instrumental",u5:"Licença comercial",
+    pay:"Pagar e gerar — $4.99",pay_rails:"Stripe · PayPal · M-Pesa · e-Mola · Mkesh · Airtel",
+    remix:"Remix",extend:"Estender",instrumental:"Instrumental",regen:"Regerar",
+    dl_mp3:"Áudio padrão",dl_wav:"Alta qualidade",dl_pdf:"Letra",dl_inst:"Instrumental",
+    lyrics_h:"Letra",to_dash:"Ir para o painel →",new_song:"Criar outra música",
+    d_songs:"As minhas músicas",d_recent:"Recentes",d_prompts:"Prompts guardados",d_fav:"Favoritos",d_account:"Conta",
+    d_hello:"Olá, criador 👋",d_subtitle:"Aqui está a sua atividade musical.",
+    d_k1:"Músicas criadas",d_k2:"Na fila (offline)",d_k3:"Prompts guardados",
+    // dynamic
+    saved:"Prompt guardado",copied:"Prompt copiado",
+    remixing:"A preparar remix...",extending:"A estender a faixa...",instru:"A gerar instrumental...",
+    downloading:"A descarregar",regenerating:"A regerar...",
+    paying:"A processar pagamento...",queued_pay:"Sem ligação — pagamento guardado. Vai retomar quando a net voltar.",
+    queued_gen:"Sem ligação — a sua música está em fila e será gerada quando a ligação voltar.",
+    back_online:"Ligação restabelecida — a sincronizar a fila...",
+    now_offline:"Está offline. Pode continuar a criar; tudo será sincronizado depois.",
+    stages:["A analisar o ambiente...","A escrever a letra...","A compor a melodia...","A gerar as vozes...","A misturar...","A masterizar..."],
+    eta:"Tempo estimado: ",sec:"s restantes",
+    of:"de",step:"Passo",
+    use:["Redes sociais","Publicidade","Podcast","Filme","Projeto pessoal","Evento","Igreja","Negócio","Outro"],
+    vocals:["Apenas instrumental","Voz masculina","Voz feminina","Dueto","Coro"],
+    lyric:["Gerar letra por mim","Eu forneço a letra","Apenas instrumental"],
+    chips:["Sobre superar desafios","Para um anúncio de 30s","Vibração de verão","Inspirado em Maputo à noite","Romântico e suave"]
+  },
+  en:{
+    nav_how:"How it works",nav_price:"Pricing",nav_faq:"FAQ",nav_cta:"Get started",
+    hero_eyebrow:"Works offline · Built for Africa",
+    hero_title:["Your music. Your style. ","100% unique."],
+    hero_sub:"Create original music with AI in minutes. No production skills needed. Answer a few questions — Musyx does the rest.",
+    hero_cta1:"Start now",hero_cta2:"▶ Watch demo",
+    f1:"Original music",f2:"Lyrics or instrumental",f3:"Commercial use",f4:"Fast generation",
+    how_eye:"How it works",how_h:"Three steps. Zero technical knowledge.",
+    s1h:"Answer the questions",s1p:"Use case, genre, mood, vocals and your idea. A guided, animated questionnaire.",
+    s2h:"AI builds the prompt",s2p:"Musyx turns your answers into an optimized prompt — and shows it to you.",
+    s3h:"Generate your music",s3p:"Free preview, then the full song with lyrics and instrumental.",
+    pr_eye:"Pricing",pr_h:"Start free. Grow when you want.",popular:"Popular",custom:"Custom",
+    t1a:"20-second previews",t1b:"Limited generations",t_start:"Start",
+    t2a:"Full songs",t2b:"WAV export",t2c:"Commercial use",t_choose:"Choose",
+    t3a:"Unlimited generations",t3b:"Priority processing",t3c:"Team access",t_choose2:"Choose",
+    t4a:"Custom pricing",t4b:"Dedicated support",t_contact:"Contact",
+    tm_eye:"Who uses it",tm_h:"Creators are already creating.",
+    tm1:'"I made my podcast intro in 4 minutes. Nobody believes it was AI."',tm1r:"Podcaster, Maputo",
+    tm2:'"Our church created an original hymn in Portuguese. The congregation loved it."',tm2r:"Worship leader",
+    tm3:'"It works without internet. I draft on the bus and generate when I get home."',tm3r:"Content creator",
+    faq_h:"Frequently asked questions",
+    faq1q:"Do I need music knowledge?",faq1a:"No. Answer a simple questionnaire and Musyx builds the prompt and the music for you.",
+    faq2q:"Does it work without internet?",faq2a:"Yes. You can create projects, write prompts and play downloaded songs offline. Generation and payment queue up and complete when the connection returns.",
+    faq3q:"Can I use it commercially?",faq3a:"Yes, on paid plans. You get a commercial license for your song.",
+    faq4q:"What payment methods do you accept?",faq4a:"Stripe, PayPal and mobile money: M-Pesa, e-Mola, Mkesh and Airtel Money.",
+    foot:"Create original music with AI — even offline.",
+    autosave:"Saved automatically",
+    q1:"What are you creating music for?",q1h:"Choose one option.",
+    q2:"Choose the genre",q2h:"You can pick several.",
+    q3:"What's the mood?",q3h:"You can pick several.",
+    q4:"Vocals",q4h:"How do you want the vocals?",
+    q5:"Lyrics",q5h:"Who writes the lyrics?",
+    q6:"Describe your song",q6h:"The most important screen. The more detail, the better.",
+    q7:"Advanced options",q7h:"Fine-tune the details.",
+    words:"words",chars:"characters",
+    duration:"Duration",langlbl:"Language",tempo:"Tempo",creativity:"Creativity",explicit:"Explicit content",commercial:"Commercial use",
+    back:"← Back",next:"Continue →",
+    pp_eye:"Your prompt — revealed",pp_h:"Unlike others, we show you the prompt.",pp_sub:"Edit it, copy it, or generate from it.",
+    copy:"Copy",save:"Save",edit_ans:"← Edit answers",gen_preview:"Generate preview →",
+    gen_h:"Creating your music",
+    pw_eye:"Preview ready",pw_h:"Listen to the first 20 seconds.",pw_prev:"Preview · 20 seconds",
+    pw_unlock:"Unlock full song",u1:"Full-length song",u2:"WAV export",u3:"Lyrics PDF",u4:"Instrumental version",u5:"Commercial license",
+    pay:"Pay and generate — $4.99",pay_rails:"Stripe · PayPal · M-Pesa · e-Mola · Mkesh · Airtel",
+    remix:"Remix",extend:"Extend",instrumental:"Instrumental",regen:"Regenerate",
+    dl_mp3:"Standard audio",dl_wav:"High quality",dl_pdf:"Lyrics",dl_inst:"Instrumental",
+    lyrics_h:"Lyrics",to_dash:"Go to dashboard →",new_song:"Create another song",
+    d_songs:"My songs",d_recent:"Recent",d_prompts:"Saved prompts",d_fav:"Favorites",d_account:"Account",
+    d_hello:"Hello, creator 👋",d_subtitle:"Here's your music activity.",
+    d_k1:"Songs created",d_k2:"In queue (offline)",d_k3:"Saved prompts",
+    saved:"Prompt saved",copied:"Prompt copied",
+    remixing:"Preparing remix...",extending:"Extending the track...",instru:"Generating instrumental...",
+    downloading:"Downloading",regenerating:"Regenerating...",
+    paying:"Processing payment...",queued_pay:"No connection — payment saved. It will resume when you're back online.",
+    queued_gen:"No connection — your song is queued and will generate when the connection returns.",
+    back_online:"Connection restored — syncing the queue...",
+    now_offline:"You're offline. Keep creating; everything will sync later.",
+    stages:["Analyzing the mood...","Writing the lyrics...","Composing the melody...","Generating vocals...","Mixing...","Mastering..."],
+    eta:"Estimated time: ",sec:"s remaining",
+    of:"of",step:"Step",
+    use:["Social media","Advertisement","Podcast","Film","Personal project","Event","Church","Business","Other"],
+    vocals:["Instrumental only","Male vocals","Female vocals","Duet","Choir"],
+    lyric:["Generate lyrics for me","I'll provide lyrics","Instrumental only"],
+    chips:["About overcoming challenges","For a 30s ad","Summer vibe","Inspired by Maputo at night","Romantic and smooth"]
+  }
+};
+let lang="pt";
+const t=k=>I18N[lang][k];
+
+/* static option data (icons stay constant) */
+const USE_EM=["📱","📺","🎙️","🎬","✨","🎉","⛪","💼","➕"];
+const GENRES=["Afro House","Amapiano","Hip-Hop","Rap","Trap","EDM","Pop","Rock","Jazz","Lo-Fi","Piano","Cinematic","Gospel","Afrobeat","R&B","Kizomba"];
+const GENRE_EM=["🪘","🎹","🎤","🎤","🔊","🎛️","🎵","🎸","🎷","🌙","🎹","🎬","🙌","🥁","💜","💃"];
+const MOODS_PT=["Feliz","Triste","Romântico","Épico","Emocional","Motivacional","Escuro","Relaxante","Energético","Agressivo","Inspirador","Espiritual"];
+const MOODS_EN=["Happy","Sad","Romantic","Epic","Emotional","Motivational","Dark","Relaxing","Energetic","Aggressive","Inspirational","Spiritual"];
+const MOOD_EM=["😊","😢","❤️","⚡","🥹","🔥","🌑","🌿","⚡","💥","🌟","🕊️"];
+const VOCAL_EM=["🎵","🎤","🎤","👥","👨‍👩‍👧"];
+const LYRIC_EM=["🤖","✍️","🎵"];
+const DUR=["30s","1 min","2 min","3 min","5 min"];
+const LANGS_PT=["Português","Inglês","Espanhol","Francês"];
+const LANGS_EN=["Portuguese","English","Spanish","French"];
+const TEMPO_PT=["Lento","Médio","Rápido"];
+const TEMPO_EN=["Slow","Medium","Fast"];
+
+/* ============ state ============ */
+const state={use:0,genre:[0],mood:[8,10],vocal:2,lyric:0,idea:"",dur:3,langSel:0,tempo:2,crea:65};
+let online=true;
+
+/* ============ CONFIG ============ */
+/* Set API_ENDPOINT to your deployed serverless function URL to enable REAL music.
+   Leave it blank ("") to run in demo mode with the built-in synthesized tone.
+   The endpoint must accept { prompt } and return { audioUrl } or { status }.    */
+const CONFIG={
+  API_ENDPOINT: "https://musyx-api-2.dicksonzaqueu.workers.dev/generate",            // e.g. "https://musyx-api.YOURNAME.workers.dev/generate"
+  LLM_ENDPOINT: "",            // e.g. "https://musyx-api.YOURNAME.workers.dev/llm" (optional; enables AI prompt/lyrics)
+  POLL_MS: 4000,               // how often to poll for the result
+  MAX_POLLS: 45                // ~3 min max wait
+};
+// make CONFIG visible to the AI module layer (loaded as a separate ES module)
+window.MUSYX_CONFIG = CONFIG;
+
+/* ============ IndexedDB local storage (works offline) ============ */
+const DB_NAME="musyx",DB_VER=2;let _db=null;
+function db(){
+  return new Promise((res,rej)=>{
+    if(_db)return res(_db);
+    const r=indexedDB.open(DB_NAME,DB_VER);
+    r.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains('songs'))d.createObjectStore('songs',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('drafts'))d.createObjectStore('drafts',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('queue'))d.createObjectStore('queue',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('media'))d.createObjectStore('media',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('cache'))d.createObjectStore('cache',{keyPath:'key'});
+    };
+    r.onsuccess=e=>{_db=e.target.result;res(_db);};
+    r.onerror=e=>rej(e.target.error);
+  });
+}
+async function idbPut(store,val){const d=await db();return new Promise((res,rej)=>{const tx=d.transaction(store,'readwrite');tx.objectStore(store).put(val);tx.oncomplete=()=>res(val);tx.onerror=e=>rej(e.target.error);});}
+async function idbAll(store){const d=await db();return new Promise((res,rej)=>{const tx=d.transaction(store,'readonly');const rq=tx.objectStore(store).getAll();rq.onsuccess=()=>res(rq.result||[]);rq.onerror=e=>rej(e.target.error);});}
+async function idbDel(store,id){const d=await db();return new Promise((res)=>{const tx=d.transaction(store,'readwrite');tx.objectStore(store).delete(id);tx.oncomplete=()=>res();});}
+
+/* persist the current draft locally on every change */
+async function persistDraft(){
+  try{await idbPut('drafts',{id:'current',state:JSON.parse(JSON.stringify(state)),updated:Date.now()});}catch(e){}
+}
+/* save a finished (or queued) song to local library */
+async function saveSong(song){
+  try{await idbPut('songs',song);}catch(e){}
+}
+
+/* ============ navigation ============ */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  stopPlay();
+}
+
+/* ============ i18n apply ============ */
+function setLang(l){
+  lang=l;
+  document.getElementById('lpt').classList.toggle('on',l==='pt');
+  document.getElementById('len').classList.toggle('on',l==='en');
+  document.documentElement.lang=l;
+  applyI18n();
+  buildWizard();
+}
+function applyI18n(){
+  document.querySelectorAll('[data-i]').forEach(el=>{
+    const k=el.getAttribute('data-i');const v=I18N[lang][k];
+    if(v===undefined)return;
+    if(k==='hero_title'){el.innerHTML=v[0]+'<span class="g">'+v[1]+'</span>';}
+    else el.textContent=v;
+  });
+  document.getElementById('netlabel').textContent=online?'Online':(lang==='pt'?'Offline':'Offline');
+}
+
+/* ============ theme ============ */
+function toggleTheme(){document.body.classList.toggle('light');}
+
+/* ============ network sim ============ */
+function toggleNet(){
+  online=!online;
+  const n=document.getElementById('net');
+  n.classList.toggle('off',!online);
+  document.getElementById('netlabel').textContent=online?'Online':'Offline';
+  const bar=document.getElementById('offbar');
+  if(!online){bar.textContent=t('now_offline');bar.classList.add('show');toast(t('now_offline'));}
+  else{bar.textContent=t('back_online');bar.classList.add('show');toast(t('back_online'));flushQueue();setTimeout(()=>bar.classList.remove('show'),3000);}
+}
+
+/* ============ build wizard options ============ */
+function optBtn(label,em,sel,cb){
+  const b=document.createElement('button');b.className='opt'+(sel?' sel':'');
+  b.innerHTML='<span class="em">'+em+'</span>'+label;
+  b.onclick=()=>{cb();};return b;
+}
+function buildWizard(){
+  const MOODS=lang==='pt'?MOODS_PT:MOODS_EN;
+  const LANGS=lang==='pt'?LANGS_PT:LANGS_EN;
+  const TEMPO=lang==='pt'?TEMPO_PT:TEMPO_EN;
+  // use
+  const ug=document.getElementById('useGrid');ug.innerHTML='';
+  t('use').forEach((u,i)=>ug.appendChild(optBtn(u,USE_EM[i],state.use===i,()=>{state.use=i;buildWizard();})));
+  // genre (multi)
+  const gg=document.getElementById('genreGrid');gg.innerHTML='';
+  GENRES.forEach((g,i)=>gg.appendChild(optBtn(g,GENRE_EM[i],state.genre.includes(i),()=>{toggleMulti(state.genre,i);buildWizard();})));
+  // mood (multi)
+  const mg=document.getElementById('moodGrid');mg.innerHTML='';
+  MOODS.forEach((m,i)=>mg.appendChild(optBtn(m,MOOD_EM[i],state.mood.includes(i),()=>{toggleMulti(state.mood,i);buildWizard();})));
+  // vocals
+  const vg=document.getElementById('vocalGrid');vg.innerHTML='';
+  t('vocals').forEach((v,i)=>vg.appendChild(optBtn(v,VOCAL_EM[i],state.vocal===i,()=>{state.vocal=i;buildWizard();})));
+  // lyric
+  const lg=document.getElementById('lyricGrid');lg.innerHTML='';
+  t('lyric').forEach((l,i)=>lg.appendChild(optBtn(l,LYRIC_EM[i],state.lyric===i,()=>{state.lyric=i;document.getElementById('lyricEditor').classList.toggle('hidden',i!==1);buildWizard();})));
+  document.getElementById('lyricEditor').classList.toggle('hidden',state.lyric!==1);
+  // idea chips
+  const ic=document.getElementById('ideaChips');ic.innerHTML='';
+  t('chips').forEach(c=>{const b=document.createElement('button');b.className='chip';b.textContent=c;b.onclick=()=>{const ta=document.getElementById('ideaText');ta.value=(ta.value?ta.value+' ':'')+c;state.idea=ta.value;};ic.appendChild(b);});
+  document.getElementById('ideaText').value=state.idea;
+  // advanced pills
+  pillRow('durRow',DUR,state.dur,i=>{state.dur=i;buildWizard();});
+  pillRow('langRow',LANGS,state.langSel,i=>{state.langSel=i;buildWizard();});
+  pillRow('tempoRow',TEMPO,state.tempo,i=>{state.tempo=i;buildWizard();});
+}
+function pillRow(id,arr,sel,cb){
+  const r=document.getElementById(id);r.innerHTML='';
+  arr.forEach((a,i)=>{const b=document.createElement('button');b.className='pill'+(sel===i?' sel':'');b.textContent=a;b.onclick=()=>cb(i);r.appendChild(b);});
+}
+function toggleMulti(arr,i){const idx=arr.indexOf(i);if(idx>=0){if(arr.length>1)arr.splice(idx,1);}else arr.push(i);}
+function saveDraft(){state.idea=document.getElementById('ideaText').value;persistDraft();}
+function countLyrics(){const v=document.getElementById('customLyrics').value;document.getElementById('wc').textContent=v.trim()?v.trim().split(/\s+/).length:0;document.getElementById('cc').textContent=v.length;}
+
+/* ============ wizard flow ============ */
+let stepNum=1;const TOTAL=7;
+function showStep(n){
+  document.querySelectorAll('.wiz-step').forEach(s=>s.classList.toggle('on',+s.dataset.step===n));
+  document.getElementById('progBar').style.width=(n/TOTAL*100)+'%';
+  document.getElementById('progLabel').textContent=t('step')+' '+n+' '+t('of')+' '+TOTAL;
+  document.getElementById('backBtn').style.visibility=n===1?'hidden':'visible';
+  document.getElementById('nextBtn').textContent=n===TOTAL?(lang==='pt'?'Ver prompt →':'See prompt →'):t('next');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function wizNext(){if(stepNum<TOTAL){stepNum++;showStep(stepNum);}else{buildPrompt();go('prompt');}}
+function wizBack(){if(stepNum>1){stepNum--;showStep(stepNum);}}
+function resetWizard(){stepNum=1;showStep(1);}
+
+/* ============ prompt engine (local) ============ */
+/* Adapt the app's `state` into the prompt engine's documented PromptAnswers shape.
+   Keeping this adapter in the app means the engine has zero dependency on the
+   app's internal variable names — only on this contract. */
+function stateToAnswers(){
+  const MOODS=lang==='pt'?MOODS_PT:MOODS_EN;
+  const LANGS=lang==='pt'?LANGS_PT:LANGS_EN;
+  return {
+    genres: state.genre.map(i=>GENRES[i]),
+    moods: state.mood.map(i=>MOODS_EN[i]),      // engine keys on English mood labels
+    vocals: (lang==='pt'?I18N.en.vocals:t('vocals'))[state.vocal], // English for engine lookup
+    language: LANGS_EN[state.langSel],           // engine keys on English language names
+    tempoIndex: state.tempo,
+    duration: DUR[state.dur],
+    theme: state.idea.trim(),
+    lyricsMode: (I18N.en.lyric)[state.lyric],
+    creativity: state.crea,
+    useCase: (I18N.en.use)[state.use],
+  };
+}
+
+let _promptPackage=null; // last built package (used by generation + preview)
+
+function buildPrompt(){
+  // Preferred: rule-based engine from the AI layer (richer: BPM, instruments, negative, providers)
+  if(window.MusyxAI && window.MusyxAI.buildPromptPackage){
+    const pkg=window.MusyxAI.buildPromptPackage(stateToAnswers());
+    _promptPackage=pkg;
+    renderPromptPackage(pkg);
+    // optionally enhance with the LLM in the background if online + configured
+    if(online && window.MusyxAI.hasLLM && window.MusyxAI.hasLLM()){
+      window.MusyxAI.enhanceWithLLM(pkg,window.MusyxAI.manager).then(enh=>{
+        if(enh && enh.enhanced){_promptPackage=enh;renderPromptPackage(enh);toast(lang==='pt'?'Prompt melhorado por IA':'Prompt enhanced by AI');}
+      }).catch(()=>{});
+    }
+    return;
+  }
+  // Fallback: original inline rule-based rendering (unchanged)
+  buildPromptLegacy();
+}
+
+/* render a prompt package into the existing colored-JSON preview + title/meta */
+function renderPromptPackage(pkg){
+  const s=pkg.structured;
+  const view={
+    genre:s.genre, mood:s.mood, vocals:s.vocals, language:s.language,
+    bpm:s.bpm+' BPM', tempo:s.tempo, duration:s.duration, theme:s.theme,
+    instruments:pkg.instruments, lyrics_mode:s.lyrics_mode, creativity:s.creativity
+  };
+  let html='{\n'; const ent=Object.entries(view);
+  ent.forEach(([k,v],i)=>{
+    const val=Array.isArray(v)?'['+v.map(x=>'<span class="v">"'+x+'"</span>').join(", ")+']':'<span class="v">"'+v+'"</span>';
+    html+='  <span class="k">"'+k+'"</span>: '+val+(i<ent.length-1?',':'')+'\n';
+  });
+  html+='}';
+  const body=document.getElementById('promptBody'); if(body)body.innerHTML=html;
+  // title from metadata suggestions; genre/meta for results
+  const title=(pkg.metadata.titleIdeas&&pkg.metadata.titleIdeas[0])|| (lang==='pt'?'Caminho de Luz':'Path of Light');
+  state._title=title; state._genre=s.primaryGenre;
+  const MOODS=lang==='pt'?MOODS_PT:MOODS_EN;
+  state._meta=t('vocals')[state.vocal]+" · "+(MOODS[state.mood[0]]||'')+" · "+DUR[state.dur];
+}
+
+function buildPromptLegacy(){
+  const MOODS=lang==='pt'?MOODS_PT:MOODS_EN;
+  const LANGS=lang==='pt'?LANGS_PT:LANGS_EN;
+  const TEMPO=lang==='pt'?TEMPO_PT:TEMPO_EN;
+  const genres=state.genre.map(i=>GENRES[i]);
+  const moods=state.mood.map(i=>MOODS[i]);
+  const theme=state.idea.trim()|| (lang==='pt'?"Superar obstáculos e alcançar o sucesso":"Overcoming obstacles and achieving success");
+  const obj={genre:genres.join(", "),mood:moods,vocals:t('vocals')[state.vocal],language:LANGS[state.langSel],tempo:TEMPO[state.tempo],duration:DUR[state.dur],theme:theme,lyrics_mode:t('lyric')[state.lyric],creativity:state.crea+"%"};
+  // render colored JSON
+  let html='{\n';
+  const ent=Object.entries(obj);
+  ent.forEach(([k,v],i)=>{
+    const val=Array.isArray(v)?'['+v.map(x=>'<span class="v">"'+x+'"</span>').join(", ")+']':'<span class="v">"'+v+'"</span>';
+    html+='  <span class="k">"'+k+'"</span>: '+val+(i<ent.length-1?',':'')+'\n';
+  });
+  html+='}';
+  document.getElementById('promptBody').innerHTML=html;
+  // titles
+  const titlePT=["Caminho de Luz","Recomeço","Horizonte","Força Interior","Maputo à Noite"];
+  const titleEN=["Path of Light","New Beginning","Horizon","Inner Strength","Maputo Nights"];
+  const title=(lang==='pt'?titlePT:titleEN)[Math.floor(Math.random()*5)];
+  state._title=title;state._genre=genres[0];state._meta=t('vocals')[state.vocal]+" · "+moods[0]+" · "+DUR[state.dur]+" · "+LANGS[state.langSel];
+}
+function copyPrompt(){toast(t('copied'));}
+
+/* ============ generation ============ */
+let genTimer=null;
+let _resultAudioUrl=null; // real audio URL when API is used
+
+function buildPromptText(){
+  // Preferred: use the engine's provider-specific prompt (active music provider)
+  if(_promptPackage && _promptPackage.providerPrompts){
+    const pid=(window.MusyxAI && window.MusyxAI.registry.get('music'))?window.MusyxAI.registry.get('music').info.id:'';
+    if(pid.includes('suno')) return _promptPackage.providerPrompts.suno;
+    if(pid.includes('udio')) return _promptPackage.providerPrompts.udio;
+    if(pid.includes('stable')) return _promptPackage.providerPrompts.stableaudio;
+    return _promptPackage.providerPrompts.wavespeed;
+  }
+  // Fallback: original flattening
+  const MOODS=lang==='pt'?MOODS_PT:MOODS_EN;
+  const LANGS=lang==='pt'?LANGS_PT:LANGS_EN;
+  const TEMPO=lang==='pt'?TEMPO_PT:TEMPO_EN;
+  const genres=state.genre.map(i=>GENRES[i]).join(", ");
+  const moods=state.mood.map(i=>MOODS[i]).join(", ");
+  const theme=state.idea.trim();
+  return `${genres} track, ${TEMPO[state.tempo].toLowerCase()} tempo, ${moods} mood, ${t('vocals')[state.vocal].toLowerCase()}, in ${LANGS[state.langSel]}. ${theme}`.trim();
+}
+
+async function startPreview(isRegen){
+  if(!online){await queueGeneration();toast(t('queued_gen'));go('dashboard');refreshDashboard();return;}
+  runGeneration(async ()=>{
+    if(isRegen){await finalizeSong();fillResults();go('results');toast(t('regenerating'));}
+    else {fillPaywall();go('paywall');}
+  });
+}
+
+/* the visual progress animation; if a real endpoint is configured it also drives the API call */
+function runGeneration(done){
+  go('generating');
+  const stages=t('stages');let i=0;let pct=0;
+  document.getElementById('genBar').style.width='0%';
+  document.getElementById('genStage').textContent=stages[0];
+  clearInterval(genTimer);
+
+  // kick off the REAL request in parallel if configured (endpoint set) or if the
+  // AI manager is loaded with a registered music provider
+  let apiDone=false,apiUrl=null,apiFailed=false;
+  const hasProvider = !!CONFIG.API_ENDPOINT || !!(window.MusyxAI && window.MusyxAI.hasMusicProvider && window.MusyxAI.hasMusicProvider());
+  if(hasProvider){
+    callMusicAPI(buildPromptText())
+      .then(url=>{apiUrl=url;apiDone=true;})
+      .catch(()=>{apiFailed=true;apiDone=true;});
+  }
+
+  genTimer=setInterval(()=>{
+    // when a real API is in use, hold near the end until it returns
+    const usingApi=hasProvider;
+    const ceiling=usingApi&&!apiDone?92:100;
+    pct+=Math.random()*9+5;if(pct>ceiling)pct=ceiling;
+    document.getElementById('genBar').style.width=pct+'%';
+    const eta=Math.max(0,Math.round((100-pct)/18));
+    document.getElementById('genEta').textContent=t('eta')+eta+t('sec');
+    const si=Math.min(stages.length-1,Math.floor(pct/100*stages.length));
+    if(si!==i){i=si;document.getElementById('genStage').textContent=stages[i];}
+
+    const ready = usingApi ? (apiDone && pct>=92) : pct>=100;
+    if(ready){
+      clearInterval(genTimer);
+      document.getElementById('genBar').style.width='100%';
+      _resultAudioUrl = apiUrl; // null → demo tone fallback
+      if(apiFailed) toast(lang==='pt'?'Geração indisponível — a usar demonstração':'Generation unavailable — using demo');
+      setTimeout(done,400);
+    }
+  },380);
+}
+
+/* calls your serverless function which holds the API key and talks to the music model.
+   When the AI layer (ai/ modules) is loaded, this routes through the LLM Manager so
+   generation gets retry + provider fallback + queueing. If the module failed to load
+   (e.g. opened directly from file://), it falls back to the original direct fetch. */
+async function callMusicAPI(prompt){
+  // Preferred path: go through the AI manager (registry + retry + fallback)
+  if(window.MusyxAI && window.MusyxAI.manager){
+    const M=window.MusyxAI.manager;
+    // capability-aware selection: pick providers that suit this job (e.g. avoid an
+    // instrumental-only engine when the song needs vocals). Falls back gracefully.
+    let providers;
+    try{
+      const sel=window.MusyxAI.selectMusicProviders(stateToAnswers());
+      if(sel && sel.ordered && sel.ordered.length) providers=sel.ordered;
+    }catch(e){}
+    // Generate lyrics BEFORE the music call so the model can sing them.
+    // Uses AI lyrics when the LLM is on, otherwise the rule-based placeholder —
+    // either way we pass a valid lyric so WaveSpeed's required field is satisfied.
+    const req={prompt};
+    // convert the chosen duration ("30s"/"1 min"/"3 min"...) into seconds for the model
+    try{
+      const dsel=DUR[state.dur]||'3 min';
+      let secs=180;
+      if(/s$/.test(dsel)) secs=parseInt(dsel)||30;
+      else if(/min/.test(dsel)) secs=(parseInt(dsel)||3)*60;
+      req.durationSec=Math.max(5,Math.min(240,secs));
+    }catch(e){}
+    try{
+      if(window.MusyxAI.generateLyrics && !/instrumental/i.test(stateToAnswers().vocals||'')){
+        const lr=await window.MusyxAI.generateLyrics(stateToAnswers(), window.MusyxAI.manager);
+        if(lr && lr.text && lr.text.trim()){
+          req.lyrics=lr.text;
+          state._lyrics=lr.text; state._lyricsSource=lr.source;
+        }
+      }
+    }catch(e){}
+    // fall back to any previously stored AI lyrics
+    if(!req.lyrics && state._lyrics && state._lyricsSource==='ai'){ req.lyrics=state._lyrics; }
+    const started=await M.musicStart(req, providers?{providers}:{});
+    if(!started.ok){
+      // manager already queued it if offline/failed; signal caller to use demo fallback
+      throw new Error(started.error?started.error.kind:'music_failed');
+    }
+    if(started.data.status==='completed'&&started.data.audioUrl) return started.data.audioUrl;
+    // pollable job
+    if(started.data.id){
+      for(let n=0;n<CONFIG.MAX_POLLS;n++){
+        await new Promise(s=>setTimeout(s,CONFIG.POLL_MS));
+        const pd=await M.musicPoll(started.data.id);
+        if(pd.ok){
+          if(pd.data.status==='completed'&&pd.data.audioUrl) return pd.data.audioUrl;
+          if(pd.data.status==='failed') throw new Error('failed');
+        }
+      }
+      throw new Error('timeout');
+    }
+    throw new Error('no audio');
+  }
+
+  // Fallback path: original direct fetch (unchanged behaviour)
+  const r=await fetch(CONFIG.API_ENDPOINT,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt})
+  });
+  if(!r.ok) throw new Error('api '+r.status);
+  let data=await r.json();
+  if(data.audioUrl) return data.audioUrl;
+  if(data.id||data.predictionId){
+    const id=data.id||data.predictionId;
+    for(let n=0;n<CONFIG.MAX_POLLS;n++){
+      await new Promise(s=>setTimeout(s,CONFIG.POLL_MS));
+      const pr=await fetch(CONFIG.API_ENDPOINT+'?id='+encodeURIComponent(id));
+      const pd=await pr.json();
+      if(pd.audioUrl||(pd.outputs&&pd.outputs[0])) return pd.audioUrl||pd.outputs[0];
+      if(pd.status==='failed') throw new Error('failed');
+    }
+    throw new Error('timeout');
+  }
+  throw new Error('no audio');
+}
+
+function fillPaywall(){document.getElementById('pwTitle').textContent=state._title;}
+
+async function payAndGenerate(){
+  if(!online){await queuePayment();toast(t('queued_pay'));go('dashboard');refreshDashboard();return;}
+  toast(t('paying'));
+  setTimeout(()=>runGeneration(async ()=>{await finalizeSong();fillResults();go('results');}),700);
+}
+
+/* persist the finished song into the local library (and download its audio for offline play) */
+async function finalizeSong(){
+  // Generate lyrics through the AI layer (AI-written when LLM on+online, else placeholder).
+  let lyricsText = (lang==='pt'?LYR_PT:LYR_EN); // last-resort default
+  if(window.MusyxAI && window.MusyxAI.generateLyrics){
+    try{
+      const answers=stateToAnswers();
+      const produce=async ()=>{
+        const res=await window.MusyxAI.generateLyrics(answers, window.MusyxAI.manager);
+        return {ok: !!(res&&res.text!==undefined), data:res, meta:{provider:'llm-lyrics'}};
+      };
+      // cache AI lyrics (identical request → free + offline). Placeholders aren't
+      // worth caching, but caching them is harmless and keeps the path uniform.
+      let out;
+      if(window.MusyxAI.cache){ out=await window.MusyxAI.cache.wrap('lyrics',answers,produce); }
+      else { out=await produce(); }
+      const res=out&&out.data;
+      if(res && res.text!==undefined){
+        lyricsText = res.text;
+        state._lyricsSource = res.source; // 'ai' | 'placeholder' | 'instrumental'
+      }
+    }catch(e){}
+  }
+  state._lyrics = lyricsText;
+
+  const song={
+    id:'song_'+Date.now(),
+    title:state._title,genre:state._genre,meta:state._meta,
+    audioUrl:_resultAudioUrl||null,
+    lyrics:lyricsText,
+    lyricsSource:state._lyricsSource||'default',
+    status:'done',created:Date.now()
+  };
+  // cache audio bytes locally for offline playback when we have a real URL
+  if(_resultAudioUrl){
+    try{const b=await (await fetch(_resultAudioUrl)).blob();await idbPut('media',{id:song.id,blob:b});}catch(e){}
+  }
+  await saveSong(song);
+  refreshDashboard();
+}
+
+/* offline queue */
+async function queueGeneration(){
+  const job={id:'job_'+Date.now(),type:'generation',prompt:buildPromptText(),title:state._title,genre:state._genre,meta:state._meta,created:Date.now()};
+  await idbPut('queue',job);
+  await saveSong({id:job.id,title:state._title,genre:state._genre,meta:state._meta,status:'pending',created:Date.now()});
+}
+async function queuePayment(){
+  const job={id:'pay_'+Date.now(),type:'payment',amount:4.99,title:state._title,prompt:buildPromptText(),genre:state._genre,meta:state._meta,created:Date.now()};
+  await idbPut('queue',job);
+  await saveSong({id:job.id,title:state._title,genre:state._genre,meta:state._meta,status:'pending',created:Date.now()});
+}
+/* when connection returns, flush the queue */
+async function flushQueue(){
+  // Phase 7: AI-typed jobs (llm/music/translation) are owned by the hardened
+  // queue manager — it handles dedup, backoff, and permanent-vs-retryable. We must
+  // NOT clobber those here, or a backed-off/failed job would be wrongly marked done.
+  if(window.MusyxAI && window.MusyxAI.manager){
+    try{ await window.MusyxAI.manager.processQueue(); }catch(e){}
+  }
+  // The app only manages its OWN demo library rows ('generation'/'payment'),
+  // which are simulated placeholders — mark those done on reconnect.
+  const jobs=await idbAll('queue');
+  for(const j of jobs){
+    if(['llm','music','translation'].includes(j.type)) continue; // owned by queue manager
+    await idbDel('queue',j.id);
+    await saveSong({id:j.id,title:j.title,genre:j.genre,meta:j.meta,status:'done',created:j.created});
+  }
+  refreshDashboard();
+}
+
+const LYR_PT="Quando a noite cai sobre a cidade\nEu levanto os olhos, sinto a verdade\nCada passo é um novo recomeço\nO meu caminho de luz eu reconheço\n\nVou subir, vou voar, sem parar\nA minha música ninguém vai apagar";
+const LYR_EN="When the night falls over the city\nI lift my eyes, I feel it clearly\nEvery step is a new beginning\nMy path of light, I see it shining\n\nI'll rise, I'll fly, I won't stop\nNo one can silence my song";
+
+function fillResults(){
+  document.getElementById('resTitle').textContent=state._title;
+  document.getElementById('resGenre').textContent=state._genre;
+  document.getElementById('resMeta').textContent=state._meta;
+  // reset the timer; it will fill in with the REAL song length once audio loads
+  const rt=document.getElementById('resTime'); if(rt)rt.textContent='0:00 / 0:00';
+  // preload the real audio's metadata so the true length shows before pressing play
+  if(_resultAudioUrl){
+    try{ if(!realAudio)realAudio=new Audio(); realAudio.src=_resultAudioUrl; realAudio.loop=false;
+      realAudio.onloadedmetadata=()=>updateRealTime(); }catch(e){}
+  }
+  // show engine-generated lyrics when present, else fall back to sample
+  const txt = (state._lyrics!==undefined && state._lyrics!==null) ? state._lyrics : (lang==='pt'?LYR_PT:LYR_EN);
+  document.getElementById('lyricsText').textContent = txt || (lang==='pt'?'(Instrumental — sem letra)':'(Instrumental — no lyrics)');
+  // source badge: AI vs placeholder, so it's always honest about what wrote them
+  const badge=document.getElementById('lyricsBadge');
+  if(badge){
+    const src=state._lyricsSource;
+    if(src==='ai'){badge.style.display='inline';badge.textContent=lang==='pt'?'IA':'AI';badge.style.background='rgba(124,58,237,.15)';badge.style.color='#a855f7';}
+    else if(src==='placeholder'){badge.style.display='inline';badge.textContent=lang==='pt'?'Exemplo':'Sample';badge.style.background='rgba(251,191,36,.15)';badge.style.color='#fbbf24';}
+    else{badge.style.display='none';}
+  }
+}
+
+/* ============ dashboard list ============ */
+const SEED_SONGS=[
+  {id:'seed1',title:"Caminho de Luz",genre:"Afro House",meta:"Afro House · 3:00",status:"done",created:Date.now()-5e6},
+  {id:'seed2',title:"Verão em Maputo",genre:"Amapiano",meta:"Amapiano · 2:30",status:"done",created:Date.now()-4e6},
+  {id:'seed3',title:"Hino da Vitória",genre:"Gospel",meta:"Gospel · 4:10",status:"done",created:Date.now()-3e6},
+];
+async function seedIfEmpty(){
+  const s=await idbAll('songs');
+  if(!s.length){for(const x of SEED_SONGS)await saveSong(x);}
+}
+async function refreshDashboard(){
+  let songs=await idbAll('songs');
+  songs.sort((a,b)=>b.created-a.created);
+  const done=songs.filter(s=>s.status==='done').length;
+  const pend=songs.filter(s=>s.status==='pending').length;
+  const kS=document.getElementById('kpiSongs');if(kS)kS.textContent=String(done);
+  const kQ=document.getElementById('kpiQueue');if(kQ)kQ.textContent=String(pend);
+  const list=document.getElementById('songList');if(!list)return;
+  list.innerHTML='';
+  songs.forEach(x=>{
+    const d=x.status==='done';
+    const el=document.createElement('div');el.className='songrow';
+    el.innerHTML='<div class="sc"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l10-2v13" stroke="#fff" stroke-width="2"/><circle cx="6" cy="18" r="3" stroke="#fff" stroke-width="2"/></svg></div>'+
+      '<div class="si"><b>'+x.title+'</b><span>'+(x.meta||x.genre)+'</span></div>'+
+      '<span class="badge-s '+(d?'bs-done':'bs-pend')+'">'+(d?(lang==='pt'?'Pronta':'Ready'):(lang==='pt'?'Na fila':'Queued'))+'</span>';
+    el.onclick=async ()=>{if(d){state._title=x.title;state._genre=x.genre;state._meta=x.meta||x.genre;
+        state._lyrics=x.lyrics!==undefined?x.lyrics:null; state._lyricsSource=x.lyricsSource||'default';
+        // play cached audio if we stored it
+        const m=(await idbAll('media')).find(mm=>mm.id===x.id);
+        _resultAudioUrl = m? URL.createObjectURL(m.blob):null;
+        fillResults();go('results');}else toast(t('queued_gen'));};
+    list.appendChild(el);
+  });
+}
+function buildSongs(){refreshDashboard();}
+
+
+/* ============ waveform + audio ============ */
+const NBARS=48;
+function makeBars(id){const c=document.getElementById(id);if(!c)return;c.innerHTML='';for(let i=0;i<NBARS;i++){const b=document.createElement('i');b.style.height=(18+Math.abs(Math.sin(i*0.5))*46)+'%';c.appendChild(b);}}
+['bars','bars2','bars3'].forEach(makeBars);
+
+let audioCtx=null,playing=false,rafId=null,playStart=0;
+let oscNodes=[];
+let realAudio=null; // HTMLAudioElement for real generated songs
+function ensureCtx(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
+function demoPlay(){
+  // real audio: toggle pause/resume properly (don't restart from 0)
+  if(_resultAudioUrl && realAudio && realAudio.src){
+    if(playing){
+      playing=false;setIcons(false);cancelAnimationFrame(rafId);
+      try{realAudio.pause();}catch(e){}
+      document.querySelectorAll('.bars').forEach(b=>b.classList.remove('playing'));
+    } else {
+      realAudio.play().then(()=>{playing=true;setIcons(true);animateRealBars();}).catch(()=>{});
+    }
+    return;
+  }
+  playing?stopPlay():startPlay();
+}
+function startPlay(){
+  // if a real generated track exists, play that instead of the synth demo
+  if(_resultAudioUrl){
+    if(!realAudio)realAudio=new Audio();
+    realAudio.src=_resultAudioUrl;
+    realAudio.loop=false;              // real songs must END, not repeat forever
+    realAudio.play().then(()=>{playing=true;setIcons(true);animateRealBars();}).catch(()=>{ _playSynth(); });
+    // when the real song's true length is known, show it (fixes the 3:00 mismatch)
+    realAudio.onloadedmetadata=()=>updateRealTime();
+    realAudio.ontimeupdate=()=>updateRealTime();
+    realAudio.onended=()=>{playing=false;setIcons(false);cancelAnimationFrame(rafId);document.querySelectorAll('.bars').forEach(b=>b.classList.remove('playing'));resetBars();};
+    return;
+  }
+  _playSynth();
+}
+// keep the on-screen timer in sync with the REAL audio, using its true duration
+function updateRealTime(){
+  if(!realAudio)return;
+  const cur=realAudio.currentTime||0;
+  const dur=isFinite(realAudio.duration)?realAudio.duration:0;
+  const el=document.getElementById('resTime');
+  if(el)el.textContent=fmtTime(cur)+' / '+fmtTime(dur);
+  // also correct the meta line's duration so top and bottom agree
+  if(dur>0){
+    const meta=document.getElementById('resMeta');
+    if(meta && state._meta){
+      const mins=Math.round(dur/60);
+      const label=mins>=1?(mins+' min'):(Math.round(dur)+'s');
+      // replace an existing "X min"/"Xs" segment in the meta with the real length
+      meta.textContent=state._meta.replace(/\d+\s*min|\d+\s*s(?=\s|$)/, label);
+    }
+  }
+}
+function fmtTime(s){s=Math.max(0,Math.floor(s||0));const m=Math.floor(s/60);const ss=String(s%60).padStart(2,'0');return m+':'+ss;}
+// download the REAL generated audio so it can be saved and shared
+async function downloadSong(){
+  if(!_resultAudioUrl){toast(lang==='pt'?'Gere uma música real primeiro':'Generate a real song first');return;}
+  try{
+    toast(t('downloading'));
+    const resp=await fetch(_resultAudioUrl);
+    const blob=await resp.blob();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=((state._title||'musyx-song').replace(/[^a-z0-9]+/gi,'_'))+'.mp3';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),4000);
+  }catch(e){
+    // fallback: open in a new tab so the user can save it manually
+    try{window.open(_resultAudioUrl,'_blank');}catch(_){}
+  }
+}
+// waveform that follows the REAL song's progress (a moving playhead across the bars)
+function animateRealBars(){
+  document.querySelectorAll('.bars').forEach(b=>b.classList.add('playing'));
+  const loop=()=>{
+    if(!playing)return;
+    const dur=(realAudio&&isFinite(realAudio.duration)&&realAudio.duration>0)?realAudio.duration:1;
+    const prog=(realAudio?realAudio.currentTime:0)/dur; // 0..1 how far through the song
+    document.querySelectorAll('.bars').forEach(c=>{
+      const n=c.children.length;
+      [...c.children].forEach((bar,i)=>{
+        const played=(i/n)<=prog;                 // bars before the playhead are "lit"
+        const base=18+Math.abs(Math.sin(i*0.5))*46;
+        bar.style.height=base+'%';
+        bar.style.opacity=played?'1':'0.35';       // show progress by opacity
+      });
+    });
+    rafId=requestAnimationFrame(loop);
+  };
+  loop();
+}
+function _playSynth(){
+  ensureCtx();if(audioCtx.state==='suspended')audioCtx.resume();
+  playing=true;playStart=audioCtx.currentTime;
+  setIcons(true);
+  // pleasant arpeggio loop — Afro House-ish
+  const master=audioCtx.createGain();master.gain.value=0.0;master.connect(audioCtx.destination);
+  master.gain.linearRampToValueAtTime(0.16,audioCtx.currentTime+0.3);
+  const notes=[220,277.18,329.63,440,329.63,277.18];
+  const beat=0.26;
+  const lfo=audioCtx.createOscillator();const lfoGain=audioCtx.createGain();
+  lfo.frequency.value=2;lfoGain.gain.value=0.04;lfo.connect(lfoGain).connect(master.gain);lfo.start();
+  const seq=audioCtx.createGain();seq.connect(master);
+  let step=0;
+  const tick=()=>{
+    if(!playing)return;
+    const o=audioCtx.createOscillator();const g=audioCtx.createGain();
+    o.type=step%2?'triangle':'sine';
+    o.frequency.value=notes[step%notes.length];
+    const now=audioCtx.currentTime;
+    g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(0.5,now+0.02);g.gain.exponentialRampToValueAtTime(0.001,now+beat*1.6);
+    o.connect(g).connect(seq);o.start(now);o.stop(now+beat*1.7);
+    // bass on downbeat
+    if(step%4===0){const b=audioCtx.createOscillator();const bg=audioCtx.createGain();b.type='sine';b.frequency.value=notes[0]/2;bg.gain.setValueAtTime(0,now);bg.gain.linearRampToValueAtTime(0.6,now+0.02);bg.gain.exponentialRampToValueAtTime(0.001,now+beat*3);b.connect(bg).connect(seq);b.start(now);b.stop(now+beat*3.1);}
+    step++;
+    oscNodes._seqTimer=setTimeout(tick,beat*1000);
+  };
+  tick();
+  oscNodes=[master,lfo,seq];
+  animateBars();
+}
+function stopPlay(){
+  if(!playing){return;}
+  playing=false;setIcons(false);
+  cancelAnimationFrame(rafId);
+  if(realAudio){try{realAudio.pause();}catch(e){}}
+  if(oscNodes._seqTimer)clearTimeout(oscNodes._seqTimer);
+  try{oscNodes.forEach(n=>{if(n.gain){n.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+0.15);}else if(n.stop){n.stop(audioCtx.currentTime+0.2);}});}catch(e){}
+  document.querySelectorAll('.bars').forEach(b=>b.classList.remove('playing'));
+  resetBars();
+}
+function setIcons(p){
+  const pa='<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';const pl='<path d="M8 5v14l11-7z"/>';
+  ['playIcon','pwIcon','resIcon'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=p?pa:pl;});
+}
+function animateBars(){
+  document.querySelectorAll('.bars').forEach(b=>b.classList.add('playing'));
+  const loop=()=>{
+    if(!playing)return;
+    const tNow=performance.now()/1000;
+    document.querySelectorAll('.bars').forEach(c=>{
+      [...c.children].forEach((bar,i)=>{
+        const v=Math.abs(Math.sin(tNow*4+i*0.45))*0.6+Math.abs(Math.sin(tNow*7+i))*0.3;
+        bar.style.height=(14+v*72)+'%';
+      });
+    });
+    rafId=requestAnimationFrame(loop);
+  };
+  loop();
+}
+function resetBars(){document.querySelectorAll('.bars').forEach(c=>{[...c.children].forEach((bar,i)=>{bar.style.height=(18+Math.abs(Math.sin(i*0.5))*46)+'%';});});}
+
+/* ============ toast ============ */
+let toastTimer=null;
+function toast(msg){const el=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200);}
+
+/* ============ init ============ */
+(async function init(){
+  try{await seedIfEmpty();}catch(e){}
+  buildWizard();showStep(1);applyI18n();
+  await refreshDashboard();
+  document.getElementById('creaSlider').addEventListener('input',e=>{state.crea=+e.target.value;persistDraft();});
+  // persist draft as the user fills the wizard
+  document.getElementById('ideaText').addEventListener('input',persistDraft);
+
+  // register service worker for offline + installability
+  if('serviceWorker' in navigator){
+    try{await navigator.serviceWorker.register('sw.js');}catch(e){console.log('SW failed (fine on file://):',e.message);}
+  }
+
+  // reflect REAL connectivity (the nav pill also lets you simulate it for demos)
+  window.addEventListener('online',()=>{online=true;document.getElementById('net').classList.remove('off');document.getElementById('netlabel').textContent='Online';flushQueue();});
+  window.addEventListener('offline',()=>{online=false;document.getElementById('net').classList.add('off');document.getElementById('netlabel').textContent='Offline';});
+})();
+
+/* ---- bridge for the AI module layer (loaded as an ES module below) ----
+   The AI manager is wrapper-safe and framework-free, so instead of importing the
+   app's internals it receives small adapter functions. We expose exactly what it
+   needs and nothing more. */
+window.MUSYX_BRIDGE = {
+  isOnline: ()=>online,
+  // low-level store adapters over the IndexedDB 'queue' object store (AI-typed jobs)
+  queueStore: {
+    all: async ()=> (await idbAll('queue')).filter(j=>['llm','music','translation'].includes(j.type)),
+    put: async (job)=> idbPut('queue',job),
+    del: async (id)=> idbDel('queue',id),
+  },
+  // cache store adapter (keyPath 'key') for the Phase 8 response cache
+  cacheStore: {
+    all: async ()=> idbAll('cache'),
+    put: async (entry)=> idbPut('cache',entry),
+    del: async (key)=> idbDel('cache',key),
+  },
+  // legacy simple enqueue/drain kept for fallback if the queue manager isn't loaded
+  enqueue: async (type,payload)=>{
+    const id=type+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    await idbPut('queue',{id,type,payload,created:Date.now()});
+    return id;
+  },
+  drainAI: async (handler)=>{
+    const jobs=(await idbAll('queue')).filter(j=>['llm','music','translation'].includes(j.type));
+    for(const j of jobs){
+      let remove=true;
+      try{ remove=await handler(j); }catch(e){ remove=false; }
+      if(remove) await idbDel('queue',j.id);
+    }
+  },
+  toast:(m)=>{try{toast(m);}catch(e){}}
+};
+
+</script>
+
+<!-- AI Intelligence Layer (Phase 2–3): loaded as an ES module so it stays in its
+     own files under ai/. If this fails to load (e.g. opened from file:// without a
+     server, or on a very old browser), the app keeps working via its built-in
+     direct-fetch + demo-tone paths — the AI layer is a clean enhancement, never a
+     hard dependency. -->
+<script type="module">
+  try{
+    const { initAI, registry } = await import('./ai/bootstrap.js');
+    const { createAIManager } = await import('./ai/llm-manager.js');
+    const { buildPromptPackage, enhanceWithLLM } = await import('./ai/prompt-engine.js');
+    const { generateLyrics, analyzeStructure, improveLyrics, translateLyrics } = await import('./ai/lyrics.js');
+    const { selectMusicProviders } = await import('./ai/music-selector.js');
+    const { createQueueManager } = await import('./ai/queue-manager.js');
+    const { createCostTracker } = await import('./ai/cost-tracker.js');
+    const { createResponseCache } = await import('./ai/response-cache.js');
+    const { routeTask, localFirstGate } = await import('./ai/cost-router.js');
+
+    const CONFIG = window.MUSYX_CONFIG || {};
+    const bridge = window.MUSYX_BRIDGE;
+
+    // register providers from config (music now; llm when LLM_ENDPOINT is set)
+    initAI(CONFIG);
+
+    // Phase 8: cost monitor + response cache. The tracker subscribes to manager
+    // events; the cache persists results to IndexedDB and is credited on hits.
+    const cost = createCostTracker({
+      prices: CONFIG.PRICES,  // set real prices in CONFIG; else labeled estimates
+      persist: (snap)=>{ try{ idbPut && idbPut('cache',{key:'__cost_totals__',data:snap}); }catch(e){} },
+    });
+    const costListener = cost.attachTo();
+    const cache = createResponseCache({
+      store: bridge.cacheStore,
+      onEvent: (e)=> costListener(e),
+    });
+
+    // Phase 7: hardened offline queue (dedup, retry+backoff, permanent-vs-retryable,
+    // conflict resolution). The AI manager delegates all queue semantics to this.
+    const queue = createQueueManager({
+      store: bridge.queueStore,
+      isOnline: bridge.isOnline,
+      onEvent: (evt)=>{ /* Phase 8 cost/analytics hook */ },
+    });
+
+    // build the manager; its queue contract is satisfied by the queue manager
+    // (enqueue + process). drain is kept as a legacy fallback.
+    const manager = createAIManager({
+      isOnline: bridge.isOnline,
+      queue: {
+        enqueue: queue.enqueue,
+        process: queue.process,
+        drain: bridge.drainAI,
+      },
+      onEvent: (evt)=>{ try{ costListener(evt); }catch(e){} },
+    });
+
+    // expose to the classic (non-module) app script
+    window.MusyxAI = {
+      registry,
+      manager,
+      queue,
+      cost,
+      cache,
+      routeTask,
+      localFirstGate,
+      buildPromptPackage,
+      enhanceWithLLM,
+      generateLyrics,
+      analyzeStructure,
+      improveLyrics,
+      translateLyrics,
+      selectMusicProviders: (answers)=>selectMusicProviders(registry, answers),
+      hasMusicProvider: ()=>!!registry.get('music'),
+      hasLLM: ()=>!!registry.get('llm'),
+      snapshot: ()=>registry.snapshot(),
+    };
+    console.log('[Musyx] AI layer ready:', registry.snapshot());
+  }catch(e){
+    console.log('[Musyx] AI layer not loaded (app still works):', e.message);
+  }
+</script>
+</body>
+</html>
